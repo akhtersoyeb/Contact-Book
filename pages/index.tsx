@@ -1,4 +1,7 @@
+import { FaceFrownIcon } from '@heroicons/react/24/outline'
+import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import ContactCard from '../components/ContactCard'
 import DeleteModal from '../components/DeleteModal'
@@ -51,24 +54,47 @@ export default function Home() {
 
       <main className='bg-gray-100 min-h-screen'>
 
-        {contacts.length === 0 ? (
-          <div>No Contacts found</div>
-        ) : (
-          <div className='space-y-5 pt-10'>
-            {contacts.map(contact => (
-              <ContactCard
-                key={contact.id}
-                id={contact.id}
-                name={contact.name}
-                phone={contact.phone}
-                type={contact.type}
-                isOnWhatsapp={contact.isOnWhatsapp}
-                profilePicture={contact.profilePicture}
-                activateDeleteModal={activateDeleteModal}
-              />
-            ))}
+        <div className=' flex justify-around lg:pt-52'>
+
+          <div className=' hidden h-96 lg:flex flex-col justify-between'>
+            <h1 className='text-7xl font-light text-slate-700'>Contact Book</h1>
+            <div className='flex justify-end'>
+              <Link href={'/add-contact'} className="text-slate-700 flex items-center gap-x-1 border border-slate-600 px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-700">Add Contact<PlusCircleIcon className='w-10 h-10' /></Link>
+            </div>
           </div>
-        )}
+
+          <div className='max-w-md w-full px-2 md:px-10 h-screen lg:h-96 relative'>
+            {contacts.length === 0 ? (
+              <div className='flex flex-col h-screen lg:h-96 justify-center items-center gap-y-4'>
+                <FaceFrownIcon className='w-20 h-20 text-slate-400' />
+                <p className='text-center font-semibold text-slate-600'>No Contacts found</p>
+              </div>
+            ) : (
+              <div className='space-y-5 pt-10'>
+                {contacts.map(contact => (
+                  <ContactCard
+                    key={contact.id}
+                    id={contact.id}
+                    name={contact.name}
+                    phone={contact.phone}
+                    type={contact.type}
+                    isOnWhatsapp={contact.isOnWhatsapp}
+                    profilePicture={contact.profilePicture}
+                    activateDeleteModal={activateDeleteModal}
+                  />
+                ))}
+
+              </div>
+            )}
+
+
+            {/* <div className='h-10 w-full bg-indigo-200  flex items-stretch'> */}
+            <Link href={'/add-contact'} className="bg-slate-700 flex absolute bottom-0 z-10 left-0 right-0 lg:hidden flex-col items-center py-3 text-white font-semibold rounded-lg">Add Contact</Link>
+            {/* </div> */}
+
+          </div>
+
+        </div>
 
       </main>
     </>
