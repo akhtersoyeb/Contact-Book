@@ -21,8 +21,6 @@ export async function getServerSideProps(context) {
 const EditContactPage = ({ id }) => {
   const router = useRouter()
 
-  console.log(id)
-
   const [contacts, setContacts] = useState<Contact[]>([])
   const [index, setIndex] = useState(-1)
   const [name, setName] = useState("")
@@ -43,7 +41,6 @@ const EditContactPage = ({ id }) => {
 
   useEffect(() => {
     if (index >= 0) {
-      console.log('setting name')
       setName(contacts[index].name)
       setPhone(contacts[index].phone)
       setType(contacts[index].type)
@@ -54,23 +51,35 @@ const EditContactPage = ({ id }) => {
   }, [index])
 
 
+  useEffect(() => {
+    if (picture !== null) {
+      console.log('uploading picture')
+      uploadPicture()
+    }
+  }, [picture])
+
+
 
 
   const uploadPicture = () => {
-    if (picture == null) return
+    if (picture === null) return
     const pictureRef = ref(firebaseStorage, `images/${picture.name + v4()}`)
     uploadBytes(pictureRef, picture).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setPictureUrl(url)
-        console.log(url)
       })
     })
+  }
+
+  const handleRemovePictureButton = () => {
+    console.log()
+    setPicture(null)
+    setPictureUrl("")
   }
 
 
   const handleOnSave = (e: React.SyntheticEvent) => {
     e.preventDefault()
-    uploadPicture()
 
     const updatedContact: Contact = {
       id: id,
@@ -112,18 +121,18 @@ const EditContactPage = ({ id }) => {
                 {/* Picture */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Profile picture</label>
-                  {picture ? (
+                  {picture || pictureUrl ? (
                     <div className="mt-1 flex flex-col justify-center items-center space-y-4 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                       <Image
                         className="w-40 h-40 rounded-full"
                         width={150}
                         height={150}
-                        src={URL.createObjectURL(picture)}
+                        src={pictureUrl ? pictureUrl : URL.createObjectURL(picture)}
                         alt="Can't be rendered"
                       />
                       <button
                         className="text-rose-600"
-                        onClick={() => setPicture(null)}
+                        onClick={handleRemovePictureButton}
                       >Remove</button>
                     </div>
                   ) : (

@@ -1,7 +1,7 @@
 import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { addContactToLS } from "../lib/localStorage"
 import type { Contact } from "../lib/localStorage"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
@@ -23,8 +23,18 @@ const AddContactPage = () => {
   const [pictureUrl, setPictureUrl] = useState('')
 
 
+  useEffect(() => {
+    if (picture !== null) {
+      uploadPicture()
+    }
+  }, [picture])
+
+
   const uploadPicture = () => {
-    if (picture == null) return ""
+    if (picture === null) {
+      console.log('picture not found')
+      return
+    }
     let uploadedPictureURL = ""
     const pictureRef = ref(firebaseStorage, `images/${picture.name + v4()}`)
     uploadBytes(pictureRef, picture).then((snapshot) => {
@@ -38,8 +48,6 @@ const AddContactPage = () => {
 
   const handleOnSave = (e: React.SyntheticEvent) => {
     e.preventDefault()
-    uploadPicture()
-    console.log(pictureUrl)
     const id = v4()
 
     const newContact: Contact = {
