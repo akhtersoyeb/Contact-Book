@@ -124,6 +124,7 @@ const EditContactPage = ({ id }) => {
                   {picture || pictureUrl ? (
                     <div className="mt-1 flex flex-col justify-center items-center space-y-4 rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                       <Image
+                        priority
                         className="w-40 h-40 rounded-full"
                         width={150}
                         height={150}
